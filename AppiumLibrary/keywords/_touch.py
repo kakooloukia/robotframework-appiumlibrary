@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from appium.webdriver.common.touch_action import TouchAction
-
+import logging
 from AppiumLibrary.locators import ElementFinder
 from .keywordgroup import KeywordGroup
 
+log = logging.getLogger(__name__)
 
 class _TouchKeywords(KeywordGroup):
 
@@ -144,7 +145,7 @@ class _TouchKeywords(KeywordGroup):
 
     def click_a_point(self, x=0, y=0, duration=100):
         """ Click on a point"""
-        self._info("Clicking on a point (%s,%s)." % (x,y))
+        log.info("Clicking on a point (%s,%s)." % (x,y))
         driver = self._current_application()
         action = TouchAction(driver)
         try:
@@ -154,7 +155,7 @@ class _TouchKeywords(KeywordGroup):
 
     def click_element_at_coordinates(self, coordinate_X, coordinate_Y):
         """ click element at a certain coordinate """
-        self._info("Pressing at (%s, %s)." % (coordinate_X, coordinate_Y))
+        log.info("Pressing at (%s, %s)." % (coordinate_X, coordinate_Y))
         driver = self._current_application()
         action = TouchAction(driver)
         action.press(x=coordinate_X, y=coordinate_Y).release().perform()

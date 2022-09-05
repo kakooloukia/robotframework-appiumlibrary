@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from AppiumLibrary import utils
-from robot.api import logger
+from appium.webdriver.common.appiumby import AppiumBy
+from selenium.common.exceptions import NoSuchElementException
 
 
 class ElementFinder(object):
@@ -23,7 +24,7 @@ class ElementFinder(object):
             'default': self._find_by_default
         }
 
-    def find(self, browser, locator, tag=None):
+    def find(self, browser, locator, tag=None) -> list:
         assert browser is not None
         assert locator is not None and len(locator) > 0
 
@@ -33,28 +34,33 @@ class ElementFinder(object):
         if strategy is None:
             raise ValueError("Element locator with prefix '" + prefix + "' is not supported")
         (tag, constraints) = self._get_tag_and_constraints(tag)
-        return strategy(browser, criteria, tag, constraints)
+        try:
+            return self._normalize_result(
+                strategy(browser, criteria, tag, constraints)
+            )
+        except NoSuchElementException:
+            return list()
 
     # Strategy routines, private
 
     def _find_by_identifier(self, browser, criteria, tag, constraints):
-        elements = self._normalize_result(browser.find_elements_by_id(criteria))
-        elements.extend(self._normalize_result(browser.find_elements_by_name(criteria)))
+        elements = self._normalize_result(browser.find_element(by=AppiumBy.ID, value=criteria))
+        elements.extend(self._normalize_result(browser.find_element(by=AppiumBy.NAME, value=criteria)))
         return self._filter_elements(elements, tag, constraints)
 
     def _find_by_id(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_id(criteria),
+            browser.find_element(by=AppiumBy.ID, value=criteria),
             tag, constraints)
 
     def _find_by_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_name(criteria),
+            browser.find_element(by=AppiumBy.NAME, value=criteria),
             tag, constraints)
 
     def _find_by_xpath(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_xpath(criteria),
+            browser.find_element(by=AppiumBy.XPATH, value=criteria),
             tag, constraints)
 
     def _find_by_dom(self, browser, criteria, tag, constraints):
@@ -73,50 +79,50 @@ class ElementFinder(object):
 
     def _find_by_link_text(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_link_text(criteria),
+            browser.find_element(by=AppiumBy.LINK_TEXT, value=criteria),
             tag, constraints)
 
     def _find_by_css_selector(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_css_selector(criteria),
+            browser.find_element(by=AppiumBy.CSS_SELECTOR, value=criteria),
             tag, constraints)
 
     def _find_by_tag_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_tag_name(criteria),
+            browser.find_element(by=AppiumBy.TAG_NAME, value=criteria),
             tag, constraints)
 
     def _find_by_class_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_elements_by_class_name(criteria),
+            browser.find_element(by=AppiumBy.CLASS_NAME, value=criteria),
             tag, constraints)
 
     def _find_element_by_accessibility_id(self, browser, criteria, tag, constraints):
-        elements = browser.find_elements_by_accessibility_id(criteria)
+        elements = browser.find_element(by=AppiumBy.ACCESSIBILITY_ID, value=criteria)
         return elements
 
     def _find_by_android(self, browser, criteria, tag, constraints):
         """Find element matches by UI Automator."""
         return self._filter_elements(
-            browser.find_elements_by_android_uiautomator(criteria),
+            browser.find_element(by=AppiumBy.ANDROID_UIAUTOMATOR, value=criteria),
             tag, constraints)
 
     def _find_by_ios(self, browser, criteria, tag, constraints):
         """Find element matches by UI Automation."""
         return self._filter_elements(
-            browser.find_elements_by_ios_uiautomation(criteria),
+            browser.find_element(by=AppiumBy.IOS_UIAUTOMATION, value=criteria),
             tag, constraints)
 
     def _find_by_nsp(self, browser, criteria, tag, constraints):
         """Find element matches by  iOSNsPredicateString."""
         return self._filter_elements(
-            browser.find_elements_by_ios_predicate(criteria),
+            browser.find_element(by=AppiumBy.IOS_PREDICATE, value=criteria),
             tag, constraints)
 
     def _find_by_chain(self, browser, criteria, tag, constraints):
         """Find element matches by  iOSChainString."""
         return self._filter_elements(
-            browser.find_elements_by_ios_class_chain(criteria),
+            browser.find_element(by=AppiumBy.IOS_CLASS_CHAIN, value=criteria),
             tag, constraints)
 
     def _find_by_default(self, browser, criteria, tag, constraints):
@@ -143,7 +149,7 @@ class ElementFinder(object):
             xpath_tag,
             ' and '.join(xpath_constraints) + ' and ' if len(xpath_constraints) > 0 else '',
             ' or '.join(xpath_searchers))
-        return self._normalize_result(browser.find_elements_by_xpath(xpath))
+        return self._normalize_result(browser.find_element(by=AppiumBy.XPATH, value=xpath))
 
     # Private
     _key_attrs = {
@@ -226,6 +232,5 @@ class ElementFinder(object):
 
     def _normalize_result(self, elements):
         if not isinstance(elements, list):
-            logger.debug("WebDriver find returned %s" % elements)
-            return []
+            return [elements]
         return elements

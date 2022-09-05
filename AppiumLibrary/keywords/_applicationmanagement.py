@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging
 import robot
 import inspect
 from appium import webdriver
 from AppiumLibrary.utils import ApplicationCache
 from .keywordgroup import KeywordGroup
+
+log = logging.getLogger(__name__)
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -19,7 +22,7 @@ class _ApplicationManagementKeywords(KeywordGroup):
 
     def close_application(self):
         """Closes the current application and also close webdriver session."""
-        self._debug('Closing application with session id %s' % self._current_application().session_id)
+        log.info('Closing application with session id %s' % self._current_application().session_id)
         self._cache.close()
 
     def close_all_applications(self):
@@ -33,7 +36,7 @@ class _ApplicationManagementKeywords(KeywordGroup):
         are reset and start from `1`.
         """
 
-        self._debug('Closing all applications')
+        log.info('Closing all applications')
         self._cache.close_all()
 
     def open_application(self, remote_url, alias=None, **kwargs):
@@ -51,7 +54,7 @@ class _ApplicationManagementKeywords(KeywordGroup):
         desired_caps = kwargs
         application = webdriver.Remote(str(remote_url), desired_caps)
 
-        self._debug('Opened application with session id %s' % application.session_id)
+        log.info('Opened application with session id %s' % application.session_id)
 
         return self._cache.register(application, alias)
 
@@ -162,7 +165,7 @@ class _ApplicationManagementKeywords(KeywordGroup):
 
     def get_appium_sessionId(self):
         """Returns the current session ID as a reference"""
-        self._info("Appium Session ID: " + self._current_application().session_id)
+        log.info("Appium Session ID: " + self._current_application().session_id)
         return self._current_application().session_id
 
     def get_source(self):

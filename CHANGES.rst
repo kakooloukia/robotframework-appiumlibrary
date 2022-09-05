@@ -1,5 +1,10 @@
 History
 =======
+2.0
+----------------
+- Use Appium-Python-Client >= 2.0.0 and selenium ~= 4.x
+- add logs
+
 1.6
 ----------------
 - Sample code

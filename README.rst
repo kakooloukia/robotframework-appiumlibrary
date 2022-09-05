@@ -122,7 +122,7 @@ Project Contributors
 * `Xie Lieping <https://github.com/frankbp>`_
 * `Jari Nurminen <https://github.com/yahman72>`_
 
-AppiumLibrary is modeled after (and forked from)  `appiumandroidlibrary <https://github.com/frankbp/robotframework-appiumandroidlibrary>`_,  but re-implemented to use appium 1.X technologies.
+AppiumLibrary is modeled after (and forked from)  `appiumandroidlibrary <https://github.com/frankbp/robotframework-appiumandroidlibrary>`_,  but re-implemented to use appium 2.X technologies.
 
 
 .. _AppiumLibrary: https://github.com/serhatbolsu/robotframework-appiumlibrary

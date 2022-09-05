@@ -1,6 +1,9 @@
 import time
+import logging
 import robot
 from .keywordgroup import KeywordGroup
+
+log = logging.getLogger(__name__)
 
 
 class _WaitingKeywords(KeywordGroup):
@@ -17,6 +20,7 @@ class _WaitingKeywords(KeywordGroup):
         Element`, `Wait For Condition` and BuiltIn keyword `Wait Until Keyword
         Succeeds`.
         """
+        log.info(f"Wait until {locator} is visible")
         def check_visibility():
             visible = self._is_visible(locator)
             if visible:
@@ -41,6 +45,8 @@ class _WaitingKeywords(KeywordGroup):
         `Wait Until Page Does Not Contain Element` and
         BuiltIn keyword `Wait Until Keyword Succeeds`.
         """
+        log.info(f"Wait until page contains {text}")
+
         if not error:
             error = "Text '%s' did not appear in <TIMEOUT>" % text
         self._wait_until(timeout, error, self._is_text_present, text)
@@ -59,6 +65,7 @@ class _WaitingKeywords(KeywordGroup):
         `Wait Until Page Does Not Contain Element` and
         BuiltIn keyword `Wait Until Keyword Succeeds`.
         """
+        log.info(f"Wait until page does not contains {text}")
 
         def check_present():
             present = self._is_text_present(text)
@@ -83,6 +90,8 @@ class _WaitingKeywords(KeywordGroup):
         `Wait Until Page Does Not Contain Element`
         and BuiltIn keyword `Wait Until Keyword Succeeds`.
         """
+        log.info(f"Wait until page contains element {locator}")
+
         if not error:
             error = "Element '%s' did not appear in <TIMEOUT>" % locator
         self._wait_until(timeout, error, self._is_element_present, locator)
@@ -101,6 +110,7 @@ class _WaitingKeywords(KeywordGroup):
         `Wait Until Page Contains Element` and
         BuiltIn keyword `Wait Until Keyword Succeeds`.
         """
+        log.info(f"Wait until page does not contains element {locator}")
 
         def check_present():
             present = self._is_element_present(locator)

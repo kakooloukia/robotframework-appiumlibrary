@@ -3,6 +3,9 @@
 import sys
 import inspect
 from six import with_metaclass
+import logging
+from selenium.common.exceptions import NoSuchElementException
+
 try:
     from decorator import decorator
 except SyntaxError:  # decorator module requires Python/Jython 2.4+
@@ -10,11 +13,14 @@ except SyntaxError:  # decorator module requires Python/Jython 2.4+
 if sys.platform == 'cli':
     decorator = None  # decorator module doesn't work with IronPython 2.6
 
+log = logging.getLogger(__name__)
+
 
 def _run_on_failure_decorator(method, *args, **kwargs):
     try:
         return method(*args, **kwargs)
     except Exception as err:
+        log.error(err)
         self = args[0]
         if hasattr(self, '_run_on_failure'):
             self._run_on_failure()
