@@ -50,17 +50,17 @@ class ElementFinder(object):
 
     def _find_by_id(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.ID, value=criteria),
+            browser.find_elements(by=AppiumBy.ID, value=criteria),
             tag, constraints)
 
     def _find_by_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.NAME, value=criteria),
+            browser.find_elements(by=AppiumBy.NAME, value=criteria),
             tag, constraints)
 
     def _find_by_xpath(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.XPATH, value=criteria),
+            browser.find_elements(by=AppiumBy.XPATH, value=criteria),
             tag, constraints)
 
     def _find_by_dom(self, browser, criteria, tag, constraints):
@@ -79,50 +79,50 @@ class ElementFinder(object):
 
     def _find_by_link_text(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.LINK_TEXT, value=criteria),
+            browser.find_elements(by=AppiumBy.LINK_TEXT, value=criteria),
             tag, constraints)
 
     def _find_by_css_selector(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.CSS_SELECTOR, value=criteria),
+            browser.find_elements(by=AppiumBy.CSS_SELECTOR, value=criteria),
             tag, constraints)
 
     def _find_by_tag_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.TAG_NAME, value=criteria),
+            browser.find_elements(by=AppiumBy.TAG_NAME, value=criteria),
             tag, constraints)
 
     def _find_by_class_name(self, browser, criteria, tag, constraints):
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.CLASS_NAME, value=criteria),
+            browser.find_elements(by=AppiumBy.CLASS_NAME, value=criteria),
             tag, constraints)
 
     def _find_element_by_accessibility_id(self, browser, criteria, tag, constraints):
-        elements = browser.find_element(by=AppiumBy.ACCESSIBILITY_ID, value=criteria)
+        elements = browser.find_elements(by=AppiumBy.ACCESSIBILITY_ID, value=criteria)
         return elements
 
     def _find_by_android(self, browser, criteria, tag, constraints):
         """Find element matches by UI Automator."""
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.ANDROID_UIAUTOMATOR, value=criteria),
+            browser.find_elements(by=AppiumBy.ANDROID_UIAUTOMATOR, value=criteria),
             tag, constraints)
 
     def _find_by_ios(self, browser, criteria, tag, constraints):
         """Find element matches by UI Automation."""
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.IOS_UIAUTOMATION, value=criteria),
+            browser.find_elements(by=AppiumBy.IOS_UIAUTOMATION, value=criteria),
             tag, constraints)
 
     def _find_by_nsp(self, browser, criteria, tag, constraints):
         """Find element matches by  iOSNsPredicateString."""
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.IOS_PREDICATE, value=criteria),
+            browser.find_elements(by=AppiumBy.IOS_PREDICATE, value=criteria),
             tag, constraints)
 
     def _find_by_chain(self, browser, criteria, tag, constraints):
         """Find element matches by  iOSChainString."""
         return self._filter_elements(
-            browser.find_element(by=AppiumBy.IOS_CLASS_CHAIN, value=criteria),
+            browser.find_elements(by=AppiumBy.IOS_CLASS_CHAIN, value=criteria),
             tag, constraints)
 
     def _find_by_default(self, browser, criteria, tag, constraints):
@@ -149,7 +149,7 @@ class ElementFinder(object):
             xpath_tag,
             ' and '.join(xpath_constraints) + ' and ' if len(xpath_constraints) > 0 else '',
             ' or '.join(xpath_searchers))
-        return self._normalize_result(browser.find_element(by=AppiumBy.XPATH, value=xpath))
+        return self._normalize_result(browser.find_elements(by=AppiumBy.XPATH, value=xpath))
 
     # Private
     _key_attrs = {
