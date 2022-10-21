@@ -406,8 +406,9 @@ class _ElementKeywords(KeywordGroup):
         """
         return self._element_find(locator, False, True)
 
-    def get_element_attribute(self, locator, attribute):
+    def get_element_attribute(self, locator, attribute, multi_elements:bool=False):
         """Get element attribute using given attribute: name, value,...
+        Return a list of element attribute if `multi_elements` is set to True
 
         Examples:
 
@@ -418,11 +419,14 @@ class _ElementKeywords(KeywordGroup):
         ele_len = len(elements)
         if ele_len == 0:
             raise AssertionError("Element '%s' could not be found" % locator)
-        elif ele_len > 1:
+        elif ele_len > 1 and not multi_elements:
             log.info("CAUTION: '%s' matched %s elements - using the first element only" % (locator, len(elements)))
 
         try:
-            attr_val = elements[0].get_attribute(attribute)
+            if multi_elements:
+                attr_val = [element.get_attribute(attribute) for element in elements]
+            else:
+                attr_val = elements[0].get_attribute(attribute)
             log.info("Element '%s' attribute '%s' value '%s' " % (locator, attribute, attr_val))
             return attr_val
         except:
