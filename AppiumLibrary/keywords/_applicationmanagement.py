@@ -6,6 +6,7 @@ import robot
 import inspect
 from appium import webdriver
 from AppiumLibrary.utils import ApplicationCache
+from selenium.webdriver.remote.command import Command
 from .keywordgroup import KeywordGroup
 
 log = logging.getLogger(__name__)
@@ -162,6 +163,32 @@ class _ApplicationManagementKeywords(KeywordGroup):
         old_timeout = self.get_appium_timeout()
         self._timeout_in_secs = robot.utils.timestr_to_secs(seconds)
         return old_timeout
+
+    def set_implicit_wait(self, seconds) -> float:
+        """Sets the implicit wait value used by the current session.
+
+        Sets a sticky timeout to implicitly wait for an element to be found,
+        or a command to complete.
+
+        :Args:
+         - seconds: Amount of time to wait (in seconds)
+
+        Example:
+        | ${old_value} = | Set Implicit Wait | 15 seconds |
+        | ${old_value} = | Set Implicit Wait | 0 seconds |
+        """
+        old_value = self.get_implicit_wait()
+        new_value = robot.utils.timestr_to_secs(seconds)
+        self._current_application().implicitly_wait(new_value)
+        log.info(f"New implicit wait: {new_value}seconds")
+        return old_value
+
+    def get_implicit_wait(self) -> float:
+        """Get the current implicit wait value."""
+        timeouts = self._current_application().execute(Command.GET_TIMEOUTS)["value"]
+        implicit_wait = timeouts.get("implicit") / 1000
+        log.info(f"Current implicit wait: {implicit_wait}seconds")
+        return implicit_wait
 
     def get_appium_sessionId(self):
         """Returns the current session ID as a reference"""
